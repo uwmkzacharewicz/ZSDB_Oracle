@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+from utils import *
 import oracledb
 import yfinance as yf
 import datetime
 import sys
 import os
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from utils.db_utils import get_connection
-from utils.api_utils import get_actual_currency_rate
 
 def main():
     try:

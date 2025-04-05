@@ -11,7 +11,7 @@ Thumbs.db
 ehthumbs.db
 
 .env
-config.json
+config/config.json
 
 .venv/
 venv/
