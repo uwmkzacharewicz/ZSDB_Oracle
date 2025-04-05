@@ -1,0 +1,20 @@
+{
+    "local": {
+      "user": "karol",
+      "password": "mozilla511",
+      "dsn": "localhost/xepdb1"
+    },
+    "remote": {
+      "user": "inf2ns_zacharewiczk",
+      "password": "Mozilla.511",
+      "dsn": "213.184.8.44/orcl"
+    },
+    "proxmox": {
+      "user": "karol",
+      "password": "mozilla511",
+      "dsn": "192.168.1.200/xepdb1"
+    },
+
+    "AlphaVantageAPIkey": "U9YD8KTIA375USUI",
+    "FLASK_SECRET_KEY": "958d8ddbfdf26476445021bee7e1fd18"
+}
