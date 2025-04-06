@@ -1,36 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import requests
-import oracledb
-import json
 import sys
 import os
-import ftplib
+from utils import get_connection
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from config.settings import ftp_conf, oracle_conf
-
-# nawiązanie połączenia z bazą danych
-def get_connection():
-    if not oracle_conf:
-        raise ValueError("❌ Brak konfiguracji bazy danych dla aktywnego środowiska.")
-
-    try:
-        conn = oracledb.connect(
-            user=oracle_conf["user"],
-            password=oracle_conf["password"],
-            dsn=oracle_conf["dsn"]
-        )
-        return conn
-    except oracledb.Error as e:
-        print(f"Błąd połączenia z bazą danych: {e}")
-        raise
-
-def get_ftp_connection():
-    ftp = ftplib.FTP()
-    ftp.connect(ftp_conf["host"])
-    ftp.login(ftp_conf["user"], ftp_conf["password"])
-    ftp.cwd(ftp_conf["remote_dir"])
-    return ftp
-
 
 
 def get_actual_currency_rate(currency_code):
@@ -47,6 +23,7 @@ def get_actual_currency_rate(currency_code):
     except KeyError:
         print("Nieoczekiwana struktura odpowiedzi z NBP.")
     return None
+
 
 def save_currency_rate_to_db(currency_code):
     try:
@@ -70,5 +47,5 @@ def save_currency_rate_to_db(currency_code):
         if 'conn' in locals():
             conn.close()
 
-
-
+if __name__ == "__main__":
+    save_currency_rate_to_db('USD')
