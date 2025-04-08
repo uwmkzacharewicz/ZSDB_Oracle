@@ -1,7 +1,8 @@
-from flask import Flask, jsonify
-from flask import request
+from flask import Flask, Response, request
+import requests
 import yfinance as yf
 import os
+
 from utils import get_actual_currency_rate
 from flask import jsonify
 from import_from_csv import download_csv_file, import_csv_to_oracle
@@ -74,6 +75,62 @@ def update_exchange_rate():
         if not usd_to_pln:
             return jsonify({"error": "Nie udało się pobrać kursu USD/PLN."}), 500
         return jsonify({"rate": usd_to_pln})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/get-company-info", methods=["GET"])
+def get_company_info():
+    ticker_symbol = request.args.get("ticker")
+    if not ticker_symbol:
+        return jsonify({"error": "Brak parametru 'ticker'"}), 400
+
+    try:
+        ticker = yf.Ticker(ticker_symbol)
+        info = ticker.info
+
+        result = {
+            "symbol": ticker_symbol,
+            "name": info.get("longName", ""),
+            "sector": info.get("sector", ""),
+            "country": info.get("country", ""),
+            "website": info.get("website", ""),
+            "currency": info.get("currency", "")
+        }
+        return jsonify(result)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/search-ticker", methods=["GET"])
+def search_ticker():
+    name = request.args.get("name")
+    if not name:
+        return jsonify({"error": "Brak parametru 'name'"}), 400
+
+    url = f"https://query1.finance.yahoo.com/v1/finance/search?q={name}"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 429:
+            return jsonify({"error": "Za dużo zapytań. Odczekaj chwilę."}), 429
+        elif response.status_code != 200:
+            return jsonify({"error": f"Błąd HTTP: {response.status_code}"}), 500
+
+        results = response.json()
+        tickers = []
+        for r in results.get("quotes", []):
+            tickers.append({
+                "symbol": r.get("symbol"),
+                "name": r.get("shortname", r.get("longname", "")),
+                "exchange": r.get("exchDisp", ""),
+                "type": r.get("quoteType", "")
+            })
+
+        return jsonify(tickers)
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
