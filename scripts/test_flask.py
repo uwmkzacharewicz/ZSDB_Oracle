@@ -3,10 +3,11 @@ from flask import request
 import yfinance as yf
 import os
 from utils import get_actual_currency_rate
-
 from flask import jsonify
 from import_from_csv import download_csv_file, import_csv_to_oracle
 from update_stock_prices import update_stock_prices
+from update_exchange_rate import save_currency_rate_to_db
+
 
 
 
@@ -69,7 +70,7 @@ def update_stock():
 def update_exchange_rate():
     try:
         usd_to_pln = get_actual_currency_rate("USD")
-        update_exchange_rate()
+        save_currency_rate_to_db("USD")
         if not usd_to_pln:
             return jsonify({"error": "Nie udało się pobrać kursu USD/PLN."}), 500
         return jsonify({"rate": usd_to_pln})

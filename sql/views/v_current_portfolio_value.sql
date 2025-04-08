@@ -1,6 +1,9 @@
 CREATE OR REPLACE VIEW v_current_portfolio_value AS
 SELECT
     p.investor_id,
+    i.name AS investor_name,
+    i.email AS investor_email,
+    i.client_code,
     SUM(
         p.shares
         * (SELECT s.close_price
@@ -15,4 +18,5 @@ SELECT
             FETCH FIRST 1 ROWS ONLY)
     ) AS total_value_pln
 FROM PORTFOLIO p
-GROUP BY p.investor_id;
+JOIN INVESTOR i ON p.investor_id = i.investor_id
+GROUP BY p.investor_id, i.name, i.email, i.client_code;

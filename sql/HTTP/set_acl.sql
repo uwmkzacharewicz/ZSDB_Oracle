@@ -9,7 +9,7 @@ BEGIN
   DBMS_NETWORK_ACL_ADMIN.CREATE_ACL(
     acl         => 'flask_acl.xml',
     description => 'ACL for Flask test',
-    principal   => 'APEX_210200',   -- nazwa schematu APEX lub PUBLIC
+    principal   => 'APEX_240200',
     is_grant    => TRUE,
     privilege   => 'connect'
   );
