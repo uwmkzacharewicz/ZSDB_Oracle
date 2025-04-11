@@ -25,7 +25,7 @@ def main():
             print(f"➡ Pobieram notowania dla spółki {ticker} (company_id={company_id})...")
             try:
                 data = yf.Ticker(ticker)
-                hist = data.history(period="5d")  # np. 5 dni
+                hist = data.history(period="15d")  #  15 dni
 
                 if hist.empty:
                     print(f"   ⚠ Brak danych w yfinance dla {ticker}. Pomijam.")
