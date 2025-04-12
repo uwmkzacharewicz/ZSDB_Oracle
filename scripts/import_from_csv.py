@@ -35,15 +35,15 @@ def download_csv_file():
             ftp.retrbinary(f"RETR {REMOTE_FILENAME}", f.write)
 
         ftp.quit()
-        print(f"✅ Plik zapisany lokalnie jako: {LOCAL_PATH}")
+        print(f"Plik zapisany lokalnie jako: {LOCAL_PATH}")
         return csv_files
 
     except Exception as e:
-        print(f"❌ Błąd FTP: {e}")
+        print(f"Błąd FTP: {e}")
 
 
 def import_csv_to_oracle(file_path):
-    print(f"📂 Przetwarzam plik: {file_path}")
+    print(f"Przetwarzam plik: {file_path}")
     try:
         df = pd.read_csv(
             file_path,
@@ -53,7 +53,7 @@ def import_csv_to_oracle(file_path):
             dayfirst=False
         )
     except Exception as e:
-        print(f"❌ Błąd odczytu pliku {file_path}: {e}")
+        print(f"Błąd odczytu pliku {file_path}: {e}")
         return
 
     df = df.dropna(subset=[
@@ -88,13 +88,13 @@ def import_csv_to_oracle(file_path):
             ])
             inserted += 1
         except Exception as e:
-            print(f"❗ Błąd podczas wstawiania rekordu: {e}")
+            print(f"Błąd podczas wstawiania rekordu: {e}")
 
     conn.commit()
     cursor.close()
     conn.close()
 
-    print(f"✅ Dodano {inserted} rekordów z pliku {file_path}.")
+    print(f"Dodano {inserted} rekordów z pliku {file_path}.")
 
 
 
