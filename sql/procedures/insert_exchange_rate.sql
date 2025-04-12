@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE insert_exchange_rate(
+create or replace PROCEDURE insert_exchange_rate(
     p_currency     IN VARCHAR2,
     p_rate_to_pln  IN NUMBER
 )

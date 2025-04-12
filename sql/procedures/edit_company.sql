@@ -1,4 +1,5 @@
-create or replace PROCEDURE ADD_COMPANY (
+create or replace PROCEDURE         "EDIT_COMPANY" (
+    p_id       IN NUMBER,
     p_name     IN VARCHAR2,
     p_ticker   IN VARCHAR2,
     p_sector   IN VARCHAR2,
@@ -8,12 +9,13 @@ create or replace PROCEDURE ADD_COMPANY (
     v_err_msg  VARCHAR2(4000);
     PRAGMA AUTONOMOUS_TRANSACTION;
 BEGIN
-    INSERT INTO Company (name, ticker, sector, country, website)
-    VALUES (p_name, p_ticker, p_sector, p_country, p_website);
+    UPDATE Company
+    SET name = p_name, ticker = p_ticker, sector = p_sector, country = p_country, website = p_website
+    WHERE company_id = p_id;
 
     -- log sukcesu
     INSERT INTO Log (status, operation, user_name, table_name, action_detail, message)
-    VALUES ('OK','INSERT', SYS_CONTEXT('USERENV', 'SESSION_USER'), 'COMPANY', 'add_company', 'Dodano firmę: ' || p_name);
+    VALUES ('OK','UPDATE', SYS_CONTEXT('USERENV', 'SESSION_USER'), 'COMPANY', 'edit_company', 'Edytowano firmę: ' || p_name);
 
     COMMIT;
 EXCEPTION
@@ -23,12 +25,12 @@ EXCEPTION
         -- log błędu
         BEGIN
             INSERT INTO Log (status, operation, user_name, table_name, action_detail, message)
-            VALUES ('ERROR','INSERT', SYS_CONTEXT('USERENV', 'SESSION_USER'), 'COMPANY', 'add_company', TO_CLOB(v_err_msg));
+            VALUES ('ERROR','UPDATE', SYS_CONTEXT('USERENV', 'SESSION_USER'), 'COMPANY', 'edit_company', TO_CLOB(v_err_msg));
             COMMIT;
         EXCEPTION
             WHEN OTHERS THEN
                 NULL;
         END;
 
-        RAISE_APPLICATION_ERROR(-20001, 'Błąd podczas dodawania firmy: ' || v_err_msg);
+        RAISE_APPLICATION_ERROR(-20001, 'Błąd podczas edytowania firmy: ' || v_err_msg);
 END;

@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE generate_daily_portfolio_snapshots IS
+create or replace PROCEDURE generate_daily_portfolio_snapshots IS
   CURSOR c_investors IS
     SELECT investor_id FROM INVESTOR;
 
@@ -14,9 +14,3 @@ BEGIN
     VALUES (inv.investor_id, SYSDATE, v_total_value);
   END LOOP;
 END;
-/
-
-BEGIN
-  generate_daily_portfolio_snapshots;
-END;
-/

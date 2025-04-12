@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE make_transaction (
+create or replace PROCEDURE make_transaction (
     p_investor_id      IN NUMBER,
     p_company_id       IN NUMBER,
     p_operation        IN VARCHAR2,  -- 'BUY' lub 'SELL'

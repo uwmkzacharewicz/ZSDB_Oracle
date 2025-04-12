@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION get_latest_trade_date(
+create or replace FUNCTION get_latest_trade_date(
     p_company_id IN NUMBER
 )
 RETURN DATE
@@ -15,4 +15,3 @@ EXCEPTION
     WHEN NO_DATA_FOUND THEN
         RETURN NULL;
 END;
-/

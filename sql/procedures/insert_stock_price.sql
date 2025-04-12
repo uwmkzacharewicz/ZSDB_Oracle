@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE insert_stock_price (
+create or replace PROCEDURE insert_stock_price (
     p_company_id        IN NUMBER,
     p_trade_date        IN DATE,
     p_open_price        IN NUMBER,
@@ -7,7 +7,8 @@ CREATE OR REPLACE PROCEDURE insert_stock_price (
     p_close_price       IN NUMBER,
     p_volume            IN NUMBER,
     p_currency          IN VARCHAR2,
-    p_close_price_pln   IN NUMBER
+    p_close_price_pln   IN NUMBER,
+    p_source            IN VARCHAR2
 ) AS
     v_err_msg       VARCHAR2(4000);
     v_current_date  DATE;
@@ -24,7 +25,7 @@ BEGIN
         )
         VALUES (
             p_company_id, p_trade_date, p_open_price, p_high_price, p_low_price,
-            p_close_price, p_volume, p_currency, p_close_price_pln, 'yfinance'
+            p_close_price, p_volume, p_currency, p_close_price_pln, p_source
         );
 
         INSERT INTO LOG (
@@ -81,8 +82,8 @@ BEGIN
         VALUES (
             'INFO', 'SKIP_SAME_DATE', SYS_CONTEXT('USERENV', 'SESSION_USER'),
             'STOCKPRICE', 'insert_stock_price',
-            'Dane dla spółki ID: ' || p_company_id ||
-            ' z datą ' || TO_CHAR(p_trade_date,'YYYY-MM-DD') ||
+            'Dane dla spółki ID: ' || p_company_id || 
+            ' z datą ' || TO_CHAR(p_trade_date,'YYYY-MM-DD') || 
             ' już istnieją - pomijam.'
         );
         COMMIT;
@@ -95,7 +96,7 @@ BEGIN
         VALUES (
             'INFO', 'SKIP_OLDER_DATE', SYS_CONTEXT('USERENV', 'SESSION_USER'),
             'STOCKPRICE', 'insert_stock_price',
-            'Przyszły starsze dane (firma ID: ' || p_company_id ||
+            'Przyszły starsze dane (firma ID: ' || p_company_id || 
             ' z datą ' || TO_CHAR(p_trade_date,'YYYY-MM-DD') || ') - ignoruję.'
         );
         COMMIT;
@@ -120,4 +121,3 @@ EXCEPTION
         END;
         RAISE_APPLICATION_ERROR(-20001, 'Błąd insert_stock_price: ' || v_err_msg);
 END;
-/

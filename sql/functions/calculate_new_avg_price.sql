@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION calculate_new_avg_price (
+create or replace FUNCTION calculate_new_avg_price (
     p_current_avg    IN NUMBER,
     p_current_shares IN NUMBER,
     p_new_price      IN NUMBER,

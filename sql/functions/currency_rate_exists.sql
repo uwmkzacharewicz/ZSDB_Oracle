@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION currency_rate_exists (
+create or replace FUNCTION currency_rate_exists (
     p_currency IN VARCHAR2,
     p_date     IN DATE
 ) RETURN BOOLEAN
@@ -13,5 +13,5 @@ BEGIN
     RETURN v_count > 0;
 EXCEPTION
     WHEN OTHERS THEN
-        RETURN FALSE;
+        RETURN FALSE; 
 END;
