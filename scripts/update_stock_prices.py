@@ -38,13 +38,13 @@ def update_stock_prices():
                     print(f"Brak danych w yfinance dla {ticker}. Pomijam.")
                     continue
 
-                # 🆕 WALIDACJA
+                # WALIDACJA, brak danych
                 hist = hist.dropna(subset=['Open', 'High', 'Low', 'Close', 'Volume'])
                 if hist.empty:
                     print(f"Dane po walidacji puste. Pomijam.")
                     continue
 
-                # 🆕 CSV
+                # CSV
                 archive_file = os.path.join(ARCHIVE_DIR, f"{ticker}_{datetime.date.today()}.csv")
                 hist.to_csv(archive_file)
                 print(f"Zarchiwizowano dane do: {archive_file}")
@@ -53,13 +53,26 @@ def update_stock_prices():
                 rows_inserted = 0
                 for date, row in hist.iterrows():
                     #trade_date = date.to_pydatetime()
-                    trade_date = date
+                    trade_date = date.date()
                     open_price = float(row['Open'])
                     high_price = float(row['High'])
                     low_price = float(row['Low'])
                     close_usd = float(row['Close'])
                     volume = int(row['Volume']) if pd.notna(row['Volume']) else 0
                     close_pln = round(close_usd * usd_to_pln, 2)
+
+                    # Walidacja logiki danych
+                    if open_price < 0 or high_price < 0 or low_price < 0 or close_usd < 0 or volume < 0:
+                        print(f"Nieprawidłowe dane dla {ticker} na {trade_date}. Pomijam.")
+                        continue
+
+                    if trade_date > datetime.date.today():
+                        print(f"Data z przyszłości ({trade_date}) — pomijam.")
+                        continue
+
+                    if volume < 0:
+                        print(f"Wolumen ujemny dla {ticker} - pomijam.")
+                        continue
 
                     try:
                         cursor.callproc("insert_stock_price", [
@@ -76,13 +89,13 @@ def update_stock_prices():
                         ])
 
                     except oracledb.Error as e:
-                        print(f"      ❌ Błąd podczas wstawiania: {e}")
+                        print(f"Błąd podczas wstawiania: {e}")
                 conn.commit()
                 print(f"Dodano {rows_inserted} wierszy dla {ticker}.")
             except Exception as e:
                 print(f"Błąd przy pobieraniu danych dla {ticker}: {e}")
                 continue
-        print("✅ Import notowań zakończony.")
+        print("Import notowań zakończony.")
 
         cursor.close()
         conn.close()

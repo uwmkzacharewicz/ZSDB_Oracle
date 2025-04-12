@@ -3,21 +3,23 @@ import datetime
 import oracledb
 import os
 import sys
+from utils import get_connection
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-CSV_PATH = "/tmp/archiwum_tab_a_2025.csv"
+CSV_PATH = os.path.join(os.path.dirname(__file__), "../tmp/archiwum_tab_a_2025.csv")
 
 CURRENCY_MAP = {
-    "USD": "dolar amerykański",
-    "EUR": "euro"
+    "1USD": "dolar amerykański",
+    "1EUR": "euro"
 }
 
 def parse_date(date_str):
-    return datetime.datetime.strptime(date_str, "%d-%m-%Y").date()
+    return datetime.datetime.strptime(date_str, "%Y%m%d").date()
+
 
 def import_exchange_rates():
-    with open(CSV_PATH, encoding="utf-8") as csvfile:
+    with open(CSV_PATH, encoding="iso-8859-1") as csvfile:
         reader = csv.reader(csvfile, delimiter=';')
         headers = next(reader)  # nagłówki
 
@@ -30,7 +32,7 @@ def import_exchange_rates():
             except ValueError:
                 print(f"Nie znaleziono kolumny {iso} w pliku CSV")
 
-        conn = oracledb.connect(user="karol", password="...", dsn="...")
+        conn = get_connection()
         cursor = conn.cursor()
 
         for row in reader:

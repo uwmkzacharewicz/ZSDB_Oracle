@@ -1,4 +1,4 @@
--- Tworzysz job z harmonogramem
+
 BEGIN
   DBMS_SCHEDULER.CREATE_JOB (
     job_name        => 'JOB_SNAPSHOT_TEST',
