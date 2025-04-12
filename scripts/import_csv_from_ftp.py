@@ -35,7 +35,7 @@ def download_csv_files():
 
 # === IMPORTUJ JEDEN PLIK CSV DO BAZY ===
 def import_csv_to_oracle(file_path):
-    print(f"📂 Przetwarzam plik: {file_path}")
+    print(f"Przetwarzam plik: {file_path}")
     try:
         df = pd.read_csv(
             file_path,
@@ -45,7 +45,7 @@ def import_csv_to_oracle(file_path):
             dayfirst=True
         )
     except Exception as e:
-        print(f"❌ Błąd odczytu pliku {file_path}: {e}")
+        print(f"Błąd odczytu pliku {file_path}: {e}")
         return
 
     df = df.dropna(subset=[
@@ -73,13 +73,13 @@ def import_csv_to_oracle(file_path):
             ])
             inserted += 1
         except Exception as e:
-            print(f"❗ Błąd podczas wstawiania rekordu: {e}")
+            print(f"Błąd podczas wstawiania rekordu: {e}")
 
     conn.commit()
     cursor.close()
     conn.close()
 
-    print(f"✅ Zaimportowano {inserted} rekordów z {os.path.basename(file_path)}")
+    print(f"Zaimportowano {inserted} rekordów z {os.path.basename(file_path)}")
 
 # === GŁÓWNA FUNKCJA ===
 def main():

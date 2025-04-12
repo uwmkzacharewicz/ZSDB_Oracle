@@ -11,7 +11,7 @@ os.makedirs(LOCAL_DIR, exist_ok=True)
 LOCAL_PATH = os.path.join(LOCAL_DIR, REMOTE_FILENAME)
 
 def download_csv_file():
-    print("🔌 Łączenie z FTP...")
+    print("Łączenie z FTP...")
 
     try:
         ftp = ftplib.FTP()
@@ -29,7 +29,7 @@ def download_csv_file():
             local_path = os.path.join(LOCAL_DIR, filename)
             with open(local_path, 'wb') as f:
                 ftp.retrbinary(f"RETR " + filename, f.write)
-            print(f"⬇️  Pobrano: {filename}")
+            print(f"Pobrano: {filename}")
 
         with open(LOCAL_PATH, "wb") as f:
             ftp.retrbinary(f"RETR {REMOTE_FILENAME}", f.write)
