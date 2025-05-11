@@ -1,4 +1,4 @@
-## 📄 Dokumentacja techniczna
+## 📄 Dokumentacja
 
 Dokumentacja projektu znajduje się tutaj:  
 [📘 Zobacz dokumentację (PDF)](docs/dokumentacja.pdf)
